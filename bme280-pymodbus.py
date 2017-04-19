@@ -202,7 +202,7 @@ def updating_writer(a):
 
     log.debug("updating the context")
     context  = a[0]
-    register = 3
+    register = 3 #Read holding registers
     slave_id = 0x00
     address  = 0x00
     values = context[slave_id].getValues(register, address, count=8)
@@ -219,6 +219,11 @@ def updating_writer(a):
 
 #---------------------------------------------------------------------------# 
 # initialize your data store
+#     di = Discrete Input
+#     co = Coil (Discrete Output)
+#     hr = Holding Register (register 40000)
+#     ir = Input Register
+# initialize to 0 starting at address 0 for 100 consecutive 
 #---------------------------------------------------------------------------# 
 store = ModbusSlaveContext(
     di = ModbusSequentialDataBlock(0, [0]*100),
@@ -241,7 +246,7 @@ identity.MajorMinorRevision = '1.0'
 #---------------------------------------------------------------------------# 
 # run the server you want
 #---------------------------------------------------------------------------# 
-time = 1 # 1 seconds delay
+time = 1 # 1 second delay
 loop = LoopingCall(f=updating_writer, a=(context,))
 loop.start(time, now=False) # initially delay by time
 StartTcpServer(context, identity=identity, address=("192.168.15.137", 502))
